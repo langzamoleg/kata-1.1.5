@@ -15,19 +15,18 @@ import java.util.Properties;
 public class Util {
     public static final String DB_URL = "jdbc:mysql://localhost:3306/test";
     public static final String DB_Driver = "com.mysql.cj.jdbc.Driver";
+    public static final String LOGIN = "root";
+    public static final String PASSWORD = "04oleg04";
     public static Connection connection;
     private static SessionFactory sessionFactory;
 
     public static Connection connection() {
         try {
             Class.forName(DB_Driver);
-            connection = DriverManager.getConnection(DB_URL, "root", "04oleg04");
-        } catch (ClassNotFoundException classNotFoundException) {
-            classNotFoundException.getStackTrace();
+            connection = DriverManager.getConnection(DB_URL, LOGIN, PASSWORD);
+        } catch (ClassNotFoundException | SQLException e) {
+            e.getStackTrace();
             System.out.println("driver not found");
-        } catch (SQLException sqlException) {
-            sqlException.getStackTrace();
-            System.out.println("cant connect to db");
         }
         return connection;
     }
@@ -39,8 +38,8 @@ public class Util {
                 Properties settings = new Properties();
                 settings.put(Environment.DRIVER, DB_Driver);
                 settings.put(Environment.URL, DB_URL);
-                settings.put(Environment.USER, "root");
-                settings.put(Environment.PASS, "04oleg04");
+                settings.put(Environment.USER, LOGIN);
+                settings.put(Environment.PASS, PASSWORD);
 
         //        settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
                 settings.put(Environment.SHOW_SQL, "true");
