@@ -1,5 +1,6 @@
 package jm.task.core.jdbc.service;
 
+import jm.task.core.jdbc.dao.UserDao;
 import jm.task.core.jdbc.dao.UserDaoHibernateImpl;
 import jm.task.core.jdbc.dao.UserDaoJDBCImpl;
 import jm.task.core.jdbc.model.User;
@@ -8,8 +9,8 @@ import java.util.List;
 
 public class UserServiceImpl implements UserService {
 
-    private UserDaoJDBCImpl daoJDBC = new UserDaoJDBCImpl();
-    private UserDaoHibernateImpl daoHibernate = new UserDaoHibernateImpl();
+    private final UserDao daoJDBC = new UserDaoJDBCImpl();
+    private final UserDao daoHibernate = new UserDaoHibernateImpl();
 
     public void createUsersTable() {
         daoJDBC.createUsersTable();
