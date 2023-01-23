@@ -10,7 +10,7 @@ import java.util.List;
 import static jm.task.core.jdbc.util.Util.getSessionFactory;
 
 public class UserDaoHibernateImpl implements UserDao {
-
+    private final Session session = getSessionFactory().openSession();
     public UserDaoHibernateImpl() {
 
     }
@@ -18,17 +18,14 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void createUsersTable() {
-        Transaction transaction = null;
-        try (Session session = getSessionFactory().openSession()){
+        Transaction transaction;
+        try {
             transaction = session.getTransaction();
             transaction.begin();
             session.createSQLQuery("CREATE TABLE IF NOT EXISTS user_for_task (id INT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(30), lastName VARCHAR(35), age INT);").addEntity(User.class).executeUpdate();
             transaction.commit();
             System.out.println("Таблица создана!");
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             System.out.println("Ошибка при создании таблицы!");
             e.printStackTrace();
         }
@@ -37,17 +34,14 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void dropUsersTable() {
-        Transaction transaction = null;
-        try (Session session = getSessionFactory().openSession()){
+        Transaction transaction;
+        try {
             transaction = session.getTransaction();
             transaction.begin();
             session.createSQLQuery("DROP TABLE IF EXISTS test.user_for_task;").executeUpdate();
             transaction.commit();
             System.out.println("Таблица удалена!");
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             System.out.println("Ошибка при удалении таблицы!");
             e.printStackTrace();
         }
@@ -57,7 +51,7 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void saveUser(String name, String lastName, byte age) {
         Transaction transaction = null;
-        try (Session session = getSessionFactory().openSession()) {
+        try {
             transaction = session.getTransaction();
             transaction.begin();
             User user_new = new User(name, lastName, age);
@@ -76,7 +70,7 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void removeUserById(long id) {
         Transaction transaction = null;
-        try (Session session = getSessionFactory().openSession()){
+        try {
             transaction = session.getTransaction();
             transaction.begin();
             session.delete(String.valueOf(id), session.load(User.class, id));
@@ -93,18 +87,15 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public List<User> getAllUsers() {
-        Transaction transaction = null;
+        Transaction transaction;
         List<User> result = new ArrayList<>();
-        try (Session session = getSessionFactory().openSession()){
+        try {
             transaction = session.getTransaction();
             transaction.begin();
             result = session.createQuery("FROM User").list();
             transaction.commit();
             System.out.println("Пользователи получены!");
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             System.out.println("Ошибка при получении пользователей!");
             e.printStackTrace();
         }
@@ -113,17 +104,14 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public void cleanUsersTable() {
-        Transaction transaction = null;
-        try (Session session = getSessionFactory().openSession()) {
+        Transaction transaction;
+        try {
             transaction = session.getTransaction();
             transaction.begin();
             session.createQuery("DELETE FROM User").executeUpdate();
             transaction.commit();
             System.out.println("Таблица очищена!");
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
             System.out.println("Ошибка при очистке таблицы!");
             e.printStackTrace();
         }
